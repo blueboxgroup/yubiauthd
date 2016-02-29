@@ -79,12 +79,23 @@ sub open_store {
     return $identity_store->{class}->new($identity_store->{param});
 }
 
+my $usage_strings = {
+    'TOP'    => "yubiauthadmin <action> <arguments>\n" .
+                "Actions:\n" .
+                "\tlist - lists the yubiauth identities\n".
+                "\tadd\n",
+    'list'   => "yubiauthadmin list\n" .
+                "Lists yubikeys in database.\n",
+    'add'    => "yubiauthadmin add <yubikey OTP>\n" .
+                "Adds a new yubikey to the database, will prompt for AES key and username.\n",
+};
+
 sub usage {
     my $context = shift;
-    print STDERR "yubiauthadmin <action> <arguments>\n" .
-                 "Actions:\n" .
-                 "\tlist - lists the yubiauth identities\n".
-                 "\tadd\n";
+
+    $context = 'TOP' unless defined $context and exists $usage_strings->{$context};
+
+    print STDERR $usage_strings->{$context};
 
     exit 1;
 }
